@@ -1,0 +1,16 @@
+{
+  "name": "template",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "concurrency": "^0.1.4"
+  },
+  "scripts": {
+    "start": "concurrently \"cd ./server && nodemon devstart\" \"cd ./client && npm run dev\""
+  }
+}
