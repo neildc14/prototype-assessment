@@ -1,16 +1,16 @@
 {
-  "name": "template",
+  "name": "mern-chakra-template",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "keywords": [],
-  "author": "",
+  "author": "Neil Edward Dela Cruz",
   "license": "ISC",
   "description": "",
-  "dependencies": {
-    "concurrency": "^0.1.4"
-  },
   "scripts": {
-    "start": "concurrently \"cd ./server && nodemon devstart\" \"cd ./client && npm run dev\""
+    "start": "concurrently \"cd ./server && nodemon devstart\" \"cd ./client && npm run dev\"",
+    "install-deps": "npm install && npm install --prefix client && npm install --prefix server"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.1"
   }
 }
