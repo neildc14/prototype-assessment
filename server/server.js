@@ -7,7 +7,13 @@ const mongoose = require("mongoose");
 const route = require("./routes/route");
 
 //middlewares
-app.use(cors({ origin: "*" }));
+const corsOptions = {
+  origin: "http://127.0.0.1:5173",
+  methods: "GET,PUT,POST,DELETE",
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
