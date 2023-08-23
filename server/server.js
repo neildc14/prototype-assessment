@@ -4,10 +4,15 @@ const cors = require("cors");
 require("dotenv").config();
 
 const mongoose = require("mongoose");
+const route = require("./routes/route");
 
+//middlewares
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+//routes
+app.use("/routes", route);
 
 mongoose.set("strictQuery", true);
 mongoose.connect(process.env.MONGODB_URI, {
