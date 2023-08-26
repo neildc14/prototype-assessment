@@ -3,7 +3,6 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 
-const mongoose = require("mongoose");
 const route = require("./routes/route");
 
 //middlewares
@@ -18,20 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 //routes
-app.use("/routes", route);
-
-mongoose.set("strictQuery", true);
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-let db = mongoose.connection;
-
-db.once("open", () => {
-  console.log("Connected to the database.");
-});
-db.on("error", console.error.bind(console, "Mongodb connection error"));
+app.use("/api", route);
 
 app.listen(process.env.PORT, () => {
   console.log(`Listening on port ${process.env.PORT}`);
