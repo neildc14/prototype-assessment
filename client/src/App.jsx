@@ -1,4 +1,3 @@
-import "./App.css";
 import {
   Button,
   Input,
@@ -20,22 +19,24 @@ function App() {
   const [backendResponse, setBackendResponse] = useState("");
   console.log(backendResponse);
 
-  const ENDPOINT = "http://localhost:3000/api/fetch-data/";
+  const LOCAL_STORAGE_NAME = "userTexts";
 
   useEffect(() => {
-    const texts = JSON.parse(localStorage.getItem("userTexts") || "[]");
-    setUserTexts(texts);
+    const savedTexts = JSON.parse(
+      localStorage.getItem(LOCAL_STORAGE_NAME) || "[]"
+    );
+    setUserTexts(savedTexts);
   }, []);
 
-  const fetchBackendResponse = (e) => {
-    e.preventDefault();
+  const fetchBackendResponse = (query_event) => {
+    query_event.preventDefault();
 
     axios
-      .get(`${ENDPOINT}`, {
-        params: { url: `${userText}` },
+      .post(`${import.meta.env.VITE_RESOURCE_ENDPOINT}`, {
+        url: encodeURIComponent(`${userText}`),
       })
-      .then((response) => {
-        setBackendResponse(response.data);
+      .then((resource_response) => {
+        setBackendResponse(resource_response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -53,18 +54,18 @@ function App() {
       updatedTexts.shift();
     }
 
-    localStorage.setItem("userTexts", JSON.stringify(updatedTexts));
+    localStorage.setItem(LOCAL_STORAGE_NAME, JSON.stringify(updatedTexts));
     setUserTexts(updatedTexts);
   }
 
   return (
     <>
-      <Box height="100%" width="100%">
+      <Box height="100%" width="80%" mx="auto" py={8}>
         <Box
           as="form"
           display="flex"
-          gap="1rem"
-          width="100%"
+          justifyContent="flex-start"
+          gap="2rem"
           onSubmit={fetchBackendResponse}
         >
           <FormControl>
@@ -72,24 +73,30 @@ function App() {
               <FormLabel>URL:</FormLabel>{" "}
               <Input
                 type="text"
-                width="700px"
                 value={userText}
                 onChange={(e) => setUserText(e.target.value)}
               />
             </HStack>
           </FormControl>
-          <Button type="submit">Query</Button>
+          <Button
+            type="submit"
+            bgColor="blue.500"
+            color="white"
+            _hover={{ bgColor: "blue.600" }}
+          >
+            Query
+          </Button>
         </Box>
 
         <Select
           mt={10}
           value={selectedText}
-          onChange={(e) => {
-            setSelectedText(e.target.value);
-            setUserText(e.target.value);
+          onChange={(query_text) => {
+            setSelectedText(query_text.target.value);
+            setUserText(query_text.target.value);
           }}
         >
-          <option value="">Select Text</option>
+          <option value="">Saved Texts</option>
           {userTexts.map((text, index) => (
             <option key={index} value={text}>
               {text}
@@ -111,6 +118,7 @@ function App() {
             </Heading>
             <Code
               width="100%"
+              minHeight="20rem"
               p={4}
               textAlign="start"
               borderRadius="md"
@@ -127,6 +135,7 @@ function App() {
             </Heading>
             <Code
               width="100%"
+              minHeight="20rem"
               p={4}
               textAlign="left"
               borderRadius="md"
