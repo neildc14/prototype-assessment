@@ -31,26 +31,6 @@ const postResource = async (req, res) => {
       return duplcateResponse;
     }
 
-    function countLetterEOnKeys(duplicateResponse) {
-      if (typeof duplicateResponse !== "object") {
-        return duplicateResponse;
-      }
-      let countedEObject = duplicateResponse;
-      for (let [key, value] of Object.entries(countedEObject)) {
-        if (key.toLowerCase().includes("e")) {
-          countedEObject["countE"]
-            ? countedEObject["countE"]++
-            : (countedEObject["countE"] = 1);
-        }
-
-        if (typeof value === "object") {
-          countLetterEOnKeys(countedEObject[key]);
-        }
-      }
-
-      return countedEObject;
-    }
-
     function sortKeyString(input) {
       const upperCaseLetters = input.match(/[A-Z]/g) || [];
       const lowerCaseLetters = input.match(/[a-z]/g) || [];
@@ -82,6 +62,39 @@ const postResource = async (req, res) => {
       } else {
         return objectToSortKeyValues;
       }
+    }
+
+    function countLetterEOnKeys(duplicateResponse) {
+      if (typeof duplicateResponse !== "object" || duplicateResponse === null) {
+        return duplicateResponse;
+      }
+
+      if (Array.isArray(duplicateResponse)) {
+        const newArray = duplicateResponse.map((item) =>
+          countLetterEOnKeys(item)
+        );
+        return newArray;
+      }
+
+      if (typeof duplicateResponse === "object") {
+        const countedEObject = { ...duplicateResponse };
+
+        for (let [key, value] of Object.entries(countedEObject)) {
+          if (key.toLowerCase().includes("e")) {
+            countedEObject["countE"]
+              ? countedEObject["countE"]++
+              : (countedEObject["countE"] = 1);
+          }
+
+          if (typeof value === "object") {
+            countedEObject[key] = countLetterEOnKeys(value);
+          }
+        }
+
+        return countedEObject;
+      }
+
+      return duplicateResponse;
     }
 
     const duplicateResponse = makeDuplicateResponse(originalResponse);
